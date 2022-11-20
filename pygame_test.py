@@ -2,8 +2,13 @@ import sys
 import pygame
 import random
 import numpy as np
+import traceback
 pygame.init()
-
+pygame.mixer.init()
+pygame.mixer.music.load('game_music.wav')
+pygame.mixer.music.set_volume(0.4)
+move_sound = pygame.mixer.Sound('Move.wav')
+move_sound.set_volume(0.5)
 def compareNum(state):
     return state.f
 
@@ -133,9 +138,6 @@ class State:
             openTable.append(subStates)
         else:
             return None, None
-
-
-
 
 
 screen = pygame.display.set_mode((380, 380))
@@ -288,14 +290,17 @@ def move(direct = 0):
             swap([x, y], [x+1, y])
         elif direct == 3 and x > 0:
             swap([x, y], [x-1, y])
-
+        move_sound.play()
     except:
-        input()
+        traceback.print_exc()
+
+pygame.mixer.music.play()  # 播放音乐
 
 # 固定代码段，实现点击"X"号退出界面的功能
 while True:
     # 循环获取事件，监听事件状态
     draw_block()
+
     for event in pygame.event.get():
         # 判断用户是否点了"X"关闭按钮,并执行if代码段
         if event.type == pygame.QUIT:
@@ -322,7 +327,7 @@ while True:
             if event.key == pygame.K_i:
                 print("initial")
                 init()
-    if board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
-        print("success!")
+            if board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
+                print("success!")
     pygame.display.flip() #更新屏幕内容
 
