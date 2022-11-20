@@ -257,7 +257,7 @@ def move(direct = 0):
             swap([x, y], [x-1, y])
 
     except:
-        print("error")
+        input()
 
 # 固定代码段，实现点击"X"号退出界面的功能
 while True:
@@ -286,5 +286,10 @@ while True:
             if event.key == pygame.K_a:
                 print("autosolve")
                 autosolve()
+            if event.key == pygame.K_i:
+                print("autosolve")
+                init()
+    if board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
+        print("success!")
     pygame.display.flip() #更新屏幕内容
 
