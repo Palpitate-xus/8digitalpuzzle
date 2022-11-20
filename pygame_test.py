@@ -255,7 +255,7 @@ def draw_block():
                     x, y = self.topleft
                     pygame.draw.rect(surface, self.color, (x, y, block_size, block_size))
                     number_height  = int(block_size * 0.5)
-                    font = pygame.font.Font("2048reference/font/arial black.ttf", number_height)
+                    font = pygame.font.Font("arial black.ttf", number_height)
                     if num <= 3:
                         number_surface = font.render(self.number, True, DEEPGREY)
                     else:
