@@ -4,6 +4,7 @@ import random
 import numpy as np
 import traceback
 import time
+from test import *
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load('game_music.wav')
@@ -12,134 +13,6 @@ move_sound = pygame.mixer.Sound('Move.wav')
 move_sound.set_volume(0.5)
 def compareNum(state):
     return state.f
-
-class State:
-    def __init__(self, state, originState=None, directionFlag=None, parent=None, f=0):
-        self.state = state
-        self.originState = originState
-        self.direction = ['up', 'down', 'right', 'left']
-        if directionFlag:
-            self.direction.remove(directionFlag)
-        self.parent = parent
-        self.f = f
-
-    def getDirection(self):
-        return self.direction
-
-    def setF(self, f):
-        self.f = f
-        return
-
-    # 打印结果
-    def showInfo(self):
-        for i in range(len(self.state)):
-            for j in range(len(self.state)):
-                print(self.state[i, j], end='  ')
-            print("\n")
-        print('->')
-        return
-
-    # 获取0点
-    def getZeroPos(self):
-        postion = np.where(self.state == 0)
-        return postion
-
-    # 曼哈顿距离  f = g + h，g=1，如果用宽度优先的评估函数可以不调用该函数
-    def getFunctionValue(self):
-        cur_node = self.state.copy()
-        fin_node = self.answer.copy()
-        dist = 0
-        N = len(cur_node)
-
-        for i in range(N):
-            for j in range(N):
-                if cur_node[i][j] != fin_node[i][j]:
-                    index = np.argwhere(fin_node == cur_node[i][j])
-                    x = index[0][0]  # 最终x距离
-                    y = index[0][1]  # 最终y距离
-                    dist += (abs(x - i) + abs(y - j))
-        return dist + 1
-
-    def nextStep(self):
-        if not self.direction:
-            return []
-        subStates = []
-        boarder = len(self.state) - 1
-        # 获取0点位置
-        x, y = self.getZeroPos()
-        # 向左
-        if 'left' in self.direction and y > 0:
-            s = self.state.copy()
-            tmp = s[x, y - 1]
-            s[x, y - 1] = s[x, y]
-            s[x, y] = tmp
-            news = State(s, directionFlag='right', parent=self)
-            news.setF(news.getFunctionValue())
-            subStates.append(news)
-            # time.sleep(1)
-        # 向上
-        if 'up' in self.direction and x > 0:
-            # it can move to upper place
-            s = self.state.copy()
-            tmp = s[x - 1, y]
-            s[x - 1, y] = s[x, y]
-            s[x, y] = tmp
-            news = State(s, directionFlag='down', parent=self)
-            news.setF(news.getFunctionValue())
-            subStates.append(news)
-            # time.sleep(1)
-        # 向下
-        if 'down' in self.direction and x < boarder:
-            # it can move to down place
-            s = self.state.copy()
-            tmp = s[x + 1, y]
-            s[x + 1, y] = s[x, y]
-            s[x, y] = tmp
-            news = State(s, directionFlag='up', parent=self)
-            news.setF(news.getFunctionValue())
-            subStates.append(news)
-            # time.sleep(1)
-        # 向右
-        if self.direction.count('right') and y < boarder:
-            # it can move to right place
-            s = self.state.copy()
-            tmp = s[x, y + 1]
-            s[x, y + 1] = s[x, y]
-            s[x, y] = tmp
-            news = State(s, directionFlag='left', parent=self)
-            news.setF(news.getFunctionValue())
-            subStates.append(news)
-            # time.sleep(1)
-        # 返回F值最小的下一个点
-        subStates.sort(key=compareNum)
-        return subStates[0]
-
-    # A* 迭代
-    def solve(self):
-        # openList
-        openTable = []
-        # closeList
-        closeTable = []
-        openTable.append(self)
-        while len(openTable) > 0:
-            # 下一步的点移除open
-            n = openTable.pop(0)
-            # 加入close
-            closeTable.append(n)
-            # 确定下一步点
-            subStates = n.nextStep()
-            path = []
-            # 判断是否和最终结果相同
-            if (subStates.state == subStates.answer).all():
-                while subStates.parent and subStates.parent != self.originState:
-                    path.append(subStates.parent)
-                    subStates = subStates.parent
-                path.reverse()
-                return path
-            openTable.append(subStates)
-        else:
-            return None, None
-
 
 screen = pygame.display.set_mode((380, 380))
 screen.fill((255,255,255))
@@ -208,16 +81,17 @@ def autosolve():
     if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
         print("无解")
         return 0
-    State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
-    originState = State(np.array(board))
-    print(board)
-    s1 = State(state=originState.state, originState=originState)
-    path = s1.solve()
-    if path:
-        for node in path:
-            node.showInfo()
-        print(State.answer)
-        print("Total steps is %d" % len(path))
+    print("pygame", board)
+    main_solve([[4, 2, 3], [7, 8, 5], [1, 6, 0]])
+
+
+def detect():
+    global board
+    data = board[0] + board[1] + board[2]
+    template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+    if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
+        print("无解")
+        return 0
 
 def init():
     global board
@@ -333,6 +207,9 @@ while True:
             if event.key == pygame.K_i:
                 print("initial")
                 init()
+            if event.key == pygame.K_d:
+                print("detect")
+                detect()
             if board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
                 print("success!")
     pygame.display.flip() #更新屏幕内容

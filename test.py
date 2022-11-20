@@ -2,6 +2,7 @@ import numpy as np
 
 
 class State:
+    global originState
     def __init__(self, state, directionFlag=None, parent=None, f=0):
         self.state = state
         self.direction = ['up', 'down', 'right', 'left']
@@ -19,12 +20,14 @@ class State:
 
     # 打印结果
     def showInfo(self):
+        data = []
         for i in range(len(self.state)):
             for j in range(len(self.state)):
-                print(self.state[i, j], end='  ')
-            print("\n")
-        print('->')
-        return
+                # print(self.state[i, j], end='  ')
+                data.append(self.state[i, j])
+            # print("\n")
+        # print('->')
+        return data
 
     # 获取0点
     def getZeroPos(self):
@@ -127,6 +130,19 @@ class State:
 def compareNum(state):
     return state.f
 
+def main_solve(data = [[4, 2, 3], [7, 8, 5], [1, 6, 0]]):
+    print("test", data)
+    global originState
+    originState = State(np.array(data))
+    State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+
+    s1 = State(state=originState.state)
+    path = s1.solve()
+    if path:
+        for node in path:
+            print(node.showInfo())
+        print(State.answer)
+        print("Total steps is %d" % len(path))
 
 if __name__ == '__main__':
     # data = []
@@ -141,6 +157,6 @@ if __name__ == '__main__':
     path = s1.solve()
     if path:
         for node in path:
-            node.showInfo()
+            print(node.showInfo())
         print(State.answer)
         print("Total steps is %d" % len(path))
