@@ -129,11 +129,11 @@ def compareNum(state):
 
 
 if __name__ == '__main__':
-    data = []
-    for i in range(0, 3):
-        data.append(list(map(int, input().split())))
-    print(data)
-    # [[1, 5, 3], [2, 4, 6], [7, 0, 8]]
+    # data = []
+    # for i in range(0, 3):
+    #     data.append(list(map(int, input().split())))
+    # print(data)
+    data = [[1, 5, 3], [2, 4, 6], [7, 0, 8]]
     originState = State(np.array(data))
     State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
 
