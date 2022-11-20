@@ -3,6 +3,7 @@ import pygame
 import random
 import numpy as np
 import traceback
+import time
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load('game_music.wav')
@@ -75,7 +76,7 @@ class State:
             news = State(s, directionFlag='right', parent=self)
             news.setF(news.getFunctionValue())
             subStates.append(news)
-            move(0)
+            # time.sleep(1)
         # 向上
         if 'up' in self.direction and x > 0:
             # it can move to upper place
@@ -86,7 +87,7 @@ class State:
             news = State(s, directionFlag='down', parent=self)
             news.setF(news.getFunctionValue())
             subStates.append(news)
-            move(2)
+            # time.sleep(1)
         # 向下
         if 'down' in self.direction and x < boarder:
             # it can move to down place
@@ -97,7 +98,7 @@ class State:
             news = State(s, directionFlag='up', parent=self)
             news.setF(news.getFunctionValue())
             subStates.append(news)
-            move(3)
+            # time.sleep(1)
         # 向右
         if self.direction.count('right') and y < boarder:
             # it can move to right place
@@ -108,7 +109,7 @@ class State:
             news = State(s, directionFlag='left', parent=self)
             news.setF(news.getFunctionValue())
             subStates.append(news)
-            move(1)
+            # time.sleep(1)
         # 返回F值最小的下一个点
         subStates.sort(key=compareNum)
         return subStates[0]
@@ -171,19 +172,6 @@ board = [[0, 0, 0],
          [0, 0, 0],
          [0, 0, 0]]
 
-def autosolve():
-    global board
-    State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
-    originState = State(np.array(board))
-    print(board)
-    s1 = State(state=originState.state, originState=originState)
-    path = s1.solve()
-    if path:
-        for node in path:
-            node.showInfo()
-        print(State.answer)
-        print("Total steps is %d" % len(path))
-
 def merge(l1, l2):
     i, j = 0, 0
     res, inv = [], 0
@@ -213,6 +201,23 @@ def inversions(l :list):
     r, inv = merge(left, right)
     return r, inv + a + b
 
+def autosolve():
+    global board
+    data = board[0] + board[1] + board[2]
+    template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+    if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
+        print("无解")
+        return 0
+    State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
+    originState = State(np.array(board))
+    print(board)
+    s1 = State(state=originState.state, originState=originState)
+    path = s1.solve()
+    if path:
+        for node in path:
+            node.showInfo()
+        print(State.answer)
+        print("Total steps is %d" % len(path))
 
 def init():
     global board
@@ -273,6 +278,7 @@ def draw_block():
 def swap(a = [0, 0], b = [0, 0]):
     global board
     board[a[0]][a[1]], board[b[0]][b[1]] = board[b[0]][b[1]], board[a[0]][a[1]]
+    print(a, " --> ", b)
 
 def move(direct = 0):
     global board
@@ -293,7 +299,7 @@ def move(direct = 0):
         move_sound.play()
     except:
         traceback.print_exc()
-
+    draw_block()
 pygame.mixer.music.play()  # 播放音乐
 
 # 固定代码段，实现点击"X"号退出界面的功能
@@ -311,16 +317,16 @@ while True:
         elif event.type == pygame.KEYDOWN :
             if event.key == pygame.K_UP:
                 print("up")
-                move(2)
+                move(3)
             if event.key == pygame.K_DOWN:
                 print("down")
-                move(3)
+                move(2)
             if event.key == pygame.K_LEFT:
                 print("left")
-                move(0)
+                move(1)
             if event.key == pygame.K_RIGHT:
                 print("right")
-                move(1)
+                move(0)
             if event.key == pygame.K_a:
                 print("autosolve")
                 autosolve()
