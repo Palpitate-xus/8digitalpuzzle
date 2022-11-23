@@ -5,6 +5,12 @@ import numpy as np
 import traceback
 import time
 from test import *
+from main import main
+
+current_date = time.strftime("%Y-%m-%d", time.localtime())
+filename = "LOG_" + current_date + ".txt"
+log_file = open(filename, 'a+')
+
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load('game_music.wav')
@@ -41,10 +47,7 @@ YELLOW3 = (255, 255, 0)
 YELLOW4 = (232, 232, 10)
 
 
-board = [[0, 0, 0],
-         [0, 0, 0],
-         [0, 0, 0]]
-
+board = [[2, 8, 3], [1, 6, 4], [7, 0 ,5]]
 def merge(l1, l2):
     i, j = 0, 0
     res, inv = [], 0
@@ -77,37 +80,13 @@ def inversions(l :list):
 def autosolve():
     global board
     data = board[0] + board[1] + board[2]
-    template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
-        print("无解")
-        return 0
+    # template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+    # if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
+    #     print("无解")
+    #     return 0
     print("pygame", board)
-    main_solve([[4, 2, 3], [7, 8, 5], [1, 6, 0]])
-
-
-def detect():
-    global board
-    data = board[0] + board[1] + board[2]
-    template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-    if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
-        print("无解")
-        return 0
-
-def init():
-    global board
-    while True:
-        data = random.sample(range(9), 9)
-        template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-        if inversions(data)[1] % 2 == inversions(template)[1] % 2:  #判断是否有解
-            break
-    print(data)
-    count = 0
-    for i in range(3):
-        for j in range(3):
-            board[i][j] = data[count]
-            count+=1
-    print(board)
-init()
+    # main_solve(board)
+    main(data)
 
 def draw_block():
     global board
@@ -148,11 +127,11 @@ def draw_block():
         x = left_screen + block_gap
         y += block_size + block_gap
 
-
 def swap(a = [0, 0], b = [0, 0]):
     global board
     board[a[0]][a[1]], board[b[0]][b[1]] = board[b[0]][b[1]], board[a[0]][a[1]]
     print(a, " --> ", b)
+
 
 def move(direct = 0):
     global board
@@ -170,10 +149,29 @@ def move(direct = 0):
             swap([x, y], [x+1, y])
         elif direct == 3 and x > 0:
             swap([x, y], [x-1, y])
-        move_sound.play()
     except:
         traceback.print_exc()
     draw_block()
+
+def detect():
+    global board
+
+    data = board[0] + board[1] + board[2]
+    template = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+    if inversions(data)[1] % 2 != inversions(template)[1] % 2:  #判断是否有解
+        print("无解")
+        return 0
+
+def init():
+    global board
+    for i in range(random.randint(1, 1)):  # 随机次数交换位置，生成随机矩阵，并保证有解
+        move(random.randint(0, 3))
+    print(board)
+    log_file.write(str(board))
+    log_file.write('\n')
+init()
+
+
 pygame.mixer.music.play()  # 播放音乐
 
 # 固定代码段，实现点击"X"号退出界面的功能
@@ -191,24 +189,35 @@ while True:
         elif event.type == pygame.KEYDOWN :
             if event.key == pygame.K_UP:
                 print("up")
+                log_file.write("up\n")
                 move(3)
+                move_sound.play()
             if event.key == pygame.K_DOWN:
                 print("down")
+                log_file.write("down\n")
                 move(2)
+                move_sound.play()
             if event.key == pygame.K_LEFT:
                 print("left")
+                log_file.write("left\n")
                 move(1)
+                move_sound.play()
             if event.key == pygame.K_RIGHT:
                 print("right")
+                log_file.write("right\n")
                 move(0)
+                move_sound.play()
             if event.key == pygame.K_a:
                 print("autosolve")
+                log_file.write("autosolve\n")
                 autosolve()
             if event.key == pygame.K_i:
                 print("initial")
+                log_file.write("initial\n")
                 init()
             if event.key == pygame.K_d:
                 print("detect")
+                log_file.write("detect\n")
                 detect()
             if board == [[1, 2, 3], [4, 5, 6], [7, 8, 0]]:
                 print("success!")

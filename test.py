@@ -130,7 +130,7 @@ class State:
 def compareNum(state):
     return state.f
 
-def main_solve(data = [[4, 2, 3], [7, 8, 5], [1, 6, 0]]):
+def main_solve(data = [[2, 7, 0], [8, 6, 5], [1, 4, 3]]):
     print("test", data)
     global originState
     originState = State(np.array(data))
@@ -149,7 +149,7 @@ if __name__ == '__main__':
     # for i in range(0, 3):
     #     data.append(list(map(int, input().split())))
     # print(data)
-    data = [[1, 5, 3], [2, 4, 6], [7, 0, 8]]
+    data =   [[0, 6, 7], [1, 8, 2], [4, 5, 3]]
     originState = State(np.array(data))
     State.answer = np.array([[1, 2, 3], [4, 5, 6], [7, 8, 0]])
 
