@@ -49,11 +49,16 @@ class degth_search:
             else:
                 break
         road.reverse()
+        data = []
         for j in road:
+            temp =[]
             for i in range(0,3):
-                print(j.state[i*3:i*3+3])
-
-            print('->')
+                # print(j.state[i*3:i*3+3])
+                temp.append(j.state[i*3:i*3+3])
+            data.append(temp)
+            # print('->')
+        print(data)
+        return data
 
 
     def search(self):

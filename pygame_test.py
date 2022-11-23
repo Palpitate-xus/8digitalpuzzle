@@ -3,9 +3,11 @@ import pygame
 import random
 import numpy as np
 import traceback
-
+import time
 from test import *
 from main import main
+
+random_times = 50
 
 current_date = time.strftime("%Y-%m-%d", time.localtime())
 filename = "LOG_" + current_date + ".txt"
@@ -47,7 +49,7 @@ YELLOW3 = (255, 255, 0)
 YELLOW4 = (232, 232, 10)
 
 
-board = [[2, 8, 3], [1, 6, 4], [7, 0 ,5]]
+board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
 def merge(l1, l2):
     i, j = 0, 0
     res, inv = [], 0
@@ -86,10 +88,15 @@ def autosolve():
     #     return 0
     print("pygame", board)
     # main_solve(board)
-    main(data)
+    solutions = main(data)
+    for i in solutions:
+        draw_block(i)
+        pygame.display.flip()
+        time.sleep(0.5)
+    board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+    pygame.display.flip()
 
-def draw_block():
-    global board
+def draw_block(board = []):
     colors = {0:GREY, 1:FLESH1, 2:FLESH2, 3:RED1, 4:RED2, 5:RED3, 6:RED4, \
               7:RED5, 8:YELLOW4}
     x, y = left_screen, top_screen
@@ -151,7 +158,7 @@ def move(direct = 0):
             swap([x, y], [x-1, y])
     except:
         traceback.print_exc()
-    draw_block()
+    draw_block(board)
 
 def detect():
     global board
@@ -164,20 +171,31 @@ def detect():
 
 def init():
     global board
-    for i in range(random.randint(1, 1)):  # 随机次数交换位置，生成随机矩阵，并保证有解
+    for i in range(random.randint(1, random_times)):  # 随机次数交换位置，生成随机矩阵
         move(random.randint(0, 3))
+        draw_block(board)
     print(board)
     log_file.write(str(board))
     log_file.write('\n')
 init()
 
+def reinit():
+    global board
+    for i in range(random.randint(1, 50)):  # 随机次数交换位置，生成随机矩阵
+        move(random.randint(0, 3))
+        draw_block(board)
+        pygame.display.flip()
+        time.sleep(0.2)
+    print(board)
+    log_file.write(str(board))
+    log_file.write('\n')
 
 pygame.mixer.music.play()  # 播放音乐
 
 # 固定代码段，实现点击"X"号退出界面的功能
 while True:
     # 循环获取事件，监听事件状态
-    draw_block()
+    draw_block(board)
 
     for event in pygame.event.get():
         # 判断用户是否点了"X"关闭按钮,并执行if代码段
@@ -214,7 +232,7 @@ while True:
             if event.key == pygame.K_i:
                 print("initial")
                 log_file.write("initial\n")
-                init()
+                reinit()
             if event.key == pygame.K_d:
                 print("detect")
                 log_file.write("detect\n")
