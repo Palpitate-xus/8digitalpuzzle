@@ -3,7 +3,7 @@ import pygame
 import random
 import numpy as np
 import traceback
-import time
+
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load('game_music.wav')
