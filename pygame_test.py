@@ -3,7 +3,7 @@ import pygame
 import random
 import numpy as np
 import traceback
-import time
+
 from test import *
 from main import main
 
