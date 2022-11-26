@@ -92,6 +92,7 @@ def autosolve():
     for i in solutions:
         draw_block(i)
         pygame.display.flip()
+        move_sound.play()
         time.sleep(0.5)
     board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
     pygame.display.flip()

@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>{{name}}</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.2/css/all.css">
+
+
+  <style>
+.grid-container {
+  float: right;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  background-color: #2196F3;
+  padding: 10px;
+}
+.grid-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 80px;
+  text-align: center;
+}
+</style>
+	
+</head>
+
+
+
+<body style="background: #e1ecf2;">
+
+
+<div class="container">
+
+ <div class="row">
+     <div class="col">
+
+         <br>
+         <br>
+
+
+  <div class="grid-container" style="width: 500px; height: 500px;">
+  <div class="grid-item"  > <span id="tile0">{{initial_state.0}}</span></div>
+  <div class="grid-item"  > <span id="tile1">{{initial_state.1}}</span></div>
+  <div class="grid-item"  > <span id="tile2">{{initial_state.2}}</span></div>
+  <div class="grid-item"  > <span id="tile3">{{initial_state.3}}</span></div>
+  <div class="grid-item"  > <span id="tile4">{{initial_state.4}}</span></div>
+  <div class="grid-item"  > <span id="tile5">{{initial_state.5}}</span></div>
+  <div class="grid-item"  > <span id="tile6">{{initial_state.6}}</span></div>
+  <div class="grid-item"  > <span id="tile7">{{initial_state.7}}</span></div>
+  <div class="grid-item"  > <span id="tile8">{{initial_state.8}}</span></div>
+</div>
+
+
+    </div>
+
+      <div class="col">
+
+           <h1><a href="/">
+                <span class="icon"><i class="fas fa-home"></i></span>
+                <span class="title">Home</span>
+            </a><h1>
+          <h1 style="color:#2196F3; "> Algorithm : <strong>{{name}}</strong> </h1>
+          <h1 style="color:#2196F3; "> Search Cost : <strong>{{cost}}</strong> </h1>
+          <h1 style="color:#2196F3; "> Running Time : <strong>{{time}}</strong> </h1>
+          <h1 style="color:#2196F3; "> Search Depth : <strong>{{depth}}</strong> </h1>
+          <h1 style="color:#2196F3; "> Nodes Expanded : <strong>{{nodes_expanded}}</strong> </h1>
+          <h1 style="color:#2196F3; "> Path to goal : </h1>
+
+          {% for path in path %}
+          <li> {{path}} </li>
+          {% endfor %}
+
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+</body>
+
+<script >
+	
+
+
+	$(function () {
+  count = 0;
+  arr = {{states|safe}}
+  setInterval(function () {
+    count++;
+
+
+    if ($('#tile0').text() !=arr[count][0]){
+    $("#tile0").fadeOut(400, function () {
+      $(this).text(arr[count][0]).fadeIn(400);
+    });
+		}
+
+
+		if ($('#tile1').text() !=arr[count][1]){
+    $("#tile1").fadeOut(400, function () {
+      $(this).text(arr[count][1]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile2').text() !=arr[count][2]){
+    $("#tile2").fadeOut(400, function () {
+      $(this).text(arr[count][2]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile3').text() !=arr[count][3]){
+    $("#tile3").fadeOut(400, function () {
+      $(this).text(arr[count][3]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile4').text() !=arr[count][4]){
+    $("#tile4").fadeOut(400, function () {
+      $(this).text(arr[count][4]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile5').text() !=arr[count][5]){
+    $("#tile5").fadeOut(400, function () {
+      $(this).text(arr[count][5]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile6').text() !=arr[count][6]){
+    $("#tile6").fadeOut(400, function () {
+      $(this).text(arr[count][6]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile7').text() !=arr[count][7]){
+    $("#tile7").fadeOut(400, function () {
+      $(this).text(arr[count][7]).fadeIn(400);
+    });
+		}
+
+		if ($('#tile8').text() !=arr[count][8]){
+    $("#tile8").fadeOut(400, function () {
+      $(this).text(arr[count][8]).fadeIn(400);
+    });
+		}
+
+   
+
+  }, 2000);
+});
+</script>
+
+
+</html>
