@@ -13,7 +13,6 @@ def home(request):
             request.session['initial_state'] = form.cleaned_data['initial_state']
             request.session['search_algorithm'] = form.cleaned_data['search_algorithm']
             return redirect('solve')
-            # if a GET (or any other method) we'll create a blank form
     else:
         form = HomeForm()
     return render(request, 'home.html', {'form': form})
