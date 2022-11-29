@@ -1,27 +1,39 @@
+'''
+Python 八数码
+author: Palpitate.xus
+使用方法：运行代码，使用键盘的上下左右按键进行空白方块的移动（划重点：移动的是空白方块）
+按a可以使用自动求解，在控制台会打印出路径矩阵以及相关信息
+按i可以初始化矩阵，相当于重新开始
+生成的日志文件会保存在同文件夹中以日期命名的txt文档中
+'''
 import sys
 import pygame
 import random
 import numpy as np
 import traceback
 import time
+# test.py文件里面是老师给的A*算法
 from test import *
+# main.py里面是bfs和dfs两种算法
 from main import main
 
+# 设置随机移动的次数
 random_times = 50
-
+# 生成日志文件，将结果写入该文件中
 current_date = time.strftime("%Y-%m-%d", time.localtime())
 filename = "LOG_" + current_date + ".txt"
 log_file = open(filename, 'a+')
-
+# 初始化pygame以及背景音乐
 pygame.init()
 pygame.mixer.init()
 pygame.mixer.music.load('game_music.wav')
 pygame.mixer.music.set_volume(0.4)
 move_sound = pygame.mixer.Sound('Move.wav')
 move_sound.set_volume(0.5)
+
 def compareNum(state):
     return state.f
-
+# 设置pygame窗口
 screen = pygame.display.set_mode((380, 380))
 screen.fill((255,255,255))
 pygame.display.set_caption('8 digital puzzle')
@@ -48,8 +60,10 @@ YELLOW2 = (255, 255, 51)
 YELLOW3 = (255, 255, 0)
 YELLOW4 = (232, 232, 10)
 
-
+# 初始化矩阵
 board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+
+# 判断逆序数需要用到的函数
 def merge(l1, l2):
     i, j = 0, 0
     res, inv = [], 0
@@ -68,6 +82,7 @@ def merge(l1, l2):
         res.extend(l2[j:])
     return res, inv
 
+# 通过判断逆序数来判断是否有解
 def inversions(l :list):
     if len(l) <= 1:
         return l, 0
@@ -79,6 +94,7 @@ def inversions(l :list):
     r, inv = merge(left, right)
     return r, inv + a + b
 
+# 自动求解的代码，通过调用main.py里面的main函数进行求解，main.py里面有三种方法
 def autosolve():
     global board
     data = board[0] + board[1] + board[2]
@@ -97,6 +113,7 @@ def autosolve():
     board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
     pygame.display.flip()
 
+# 以下为显示矩阵的函数
 def draw_block(board = []):
     colors = {0:GREY, 1:FLESH1, 2:FLESH2, 3:RED1, 4:RED2, 5:RED3, 6:RED4, \
               7:RED5, 8:YELLOW4}
@@ -135,12 +152,13 @@ def draw_block(board = []):
         x = left_screen + block_gap
         y += block_size + block_gap
 
+# 该函数用于交换矩阵中的两个数
 def swap(a = [0, 0], b = [0, 0]):
     global board
     board[a[0]][a[1]], board[b[0]][b[1]] = board[b[0]][b[1]], board[a[0]][a[1]]
     print(a, " --> ", b)
 
-
+# 该函数用于移动矩阵中的空白方块，direct表示方向
 def move(direct = 0):
     global board
     x, y = 0, 0
@@ -161,6 +179,7 @@ def move(direct = 0):
         traceback.print_exc()
     draw_block(board)
 
+# 该函数用于判断当前情况是否有解
 def detect():
     global board
 
@@ -170,6 +189,7 @@ def detect():
         print("无解")
         return 0
 
+# 该函数用于第一次初始化八数码游戏
 def init():
     global board
     for i in range(random.randint(1, random_times)):  # 随机次数交换位置，生成随机矩阵
@@ -180,6 +200,7 @@ def init():
     log_file.write('\n')
 init()
 
+# 该函数用于除了第一次初始化以外的初始化（写上面的一起好像有bug，分开就没事了）
 def reinit():
     global board
     for i in range(random.randint(1, 50)):  # 随机次数交换位置，生成随机矩阵
